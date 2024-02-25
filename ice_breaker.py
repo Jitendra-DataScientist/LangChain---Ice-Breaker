@@ -38,4 +38,5 @@ if __name__ == "__main__":
     # print(chain.run(information=linkedin_data))
     
     # after course upgradation:
-    print(chain.invoke(input={"information": linkedin_data}))
+    res = chain.invoke(input={"information": linkedin_data})
+    print(res["text"])
