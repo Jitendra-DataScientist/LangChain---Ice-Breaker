@@ -1,21 +1,21 @@
-# import os
-from langchain import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+import os
+# from langchain import PromptTemplate    # deprecated or about to be deprecated
+from langchain.prompts import PromptTemplate
+# from langchain.chat_models import ChatOpenAI    # deprecated or about to be deprecated
+# from langchain_community.chat_models import ChatOpenAI    # deprecated or about to be deprecated
+from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from dotenv import load_dotenv
 
+from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
+from third_parties.linkedin import scrape_linkedin_profile
 
-# dotenv_path = os.path.join(os.getcwd(), ".env")
-# load_dotenv(dotenv_path)
-# OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
-# print (OPENAI_API_KEY)
 
-information="""Elon Reeve Musk (/ˈiːlɒn/ EE-lon; born June 28, 1971) is a businessman and investor. Musk is the founder,
- chairman, CEO and chief technology officer of SpaceX; angel investor, CEO, product architect and former chairman of
- Tesla, Inc.; owner, chairman and CTO of X Corp.; founder of the Boring Company and xAI; co-founder of Neuralink and 
- OpenAI; and president of the Musk Foundation. He is the wealthiest person in the world, with an estimated net worth of
-  US$219 billion as of November 2023, according to the Bloomberg Billionaires Index, and $241 billion according to 
-  Forbes, primarily from his ownership stakes in Tesla and SpaceX."""
+dotenv_path = os.path.join(os.getcwd(), ".env")
+load_dotenv(dotenv_path)
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
+print (OPENAI_API_KEY)
+
 
 if __name__ == "__main__":
     print("Hello Langchain")
@@ -32,5 +32,16 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    print(chain.run(information=information))
-    
+    # linkedin_profile_url = linkedin_lookup_agent(name="Jitendra Kumar Nayak ExactSpace")
+    linkedin_profile_url = linkedin_lookup_agent(name="Eden Marco Udemy")
+
+    linkedin_data = scrape_linkedin_profile(
+        linkedin_profile_url=linkedin_profile_url
+    )
+
+    # before course upgradation:
+    # print(chain.run(information=linkedin_data))
+
+    # after course upgradation:
+    res = chain.invoke(input={"information": linkedin_data})
+    print(res["text"])
