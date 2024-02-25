@@ -1,14 +1,17 @@
-# import os
-from langchain import PromptTemplate
-from langchain.chat_models import ChatOpenAI
+import os
+# from langchain import PromptTemplate    # deprecated or about to be deprecated
+from langchain.prompts import PromptTemplate
+# from langchain.chat_models import ChatOpenAI    # deprecated or about to be deprecated
+# from langchain_community.chat_models import ChatOpenAI    # deprecated or about to be deprecated
+from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from dotenv import load_dotenv
 
 
-# dotenv_path = os.path.join(os.getcwd(), ".env")
-# load_dotenv(dotenv_path)
-# OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
-# print (OPENAI_API_KEY)
+dotenv_path = os.path.join(os.getcwd(), ".env")
+load_dotenv(dotenv_path)
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
+print (OPENAI_API_KEY)
 
 information="""Elon Reeve Musk (/ˈiːlɒn/ EE-lon; born June 28, 1971) is a businessman and investor. Musk is the founder,
  chairman, CEO and chief technology officer of SpaceX; angel investor, CEO, product architect and former chairman of
@@ -32,5 +35,12 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    print(chain.run(information=information))
+    # before course upgradation:
+    # print(chain.run(information=information))
+    
+    # after course upgradation:
+    res = chain.invoke(input={"information":information})
+    # print (res)
+    print (res.keys())
+    print (res['text'])
     
