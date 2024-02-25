@@ -6,6 +6,7 @@ from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from dotenv import load_dotenv
+from third_parties.linkedin import scrape_linkedin_profile
 
 
 dotenv_path = os.path.join(os.getcwd(), ".env")
@@ -13,12 +14,6 @@ load_dotenv(dotenv_path)
 OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 print (OPENAI_API_KEY)
 
-information="""Elon Reeve Musk (/ˈiːlɒn/ EE-lon; born June 28, 1971) is a businessman and investor. Musk is the founder,
- chairman, CEO and chief technology officer of SpaceX; angel investor, CEO, product architect and former chairman of
- Tesla, Inc.; owner, chairman and CTO of X Corp.; founder of the Boring Company and xAI; co-founder of Neuralink and 
- OpenAI; and president of the Musk Foundation. He is the wealthiest person in the world, with an estimated net worth of
-  US$219 billion as of November 2023, according to the Bloomberg Billionaires Index, and $241 billion according to 
-  Forbes, primarily from his ownership stakes in Tesla and SpaceX."""
 
 if __name__ == "__main__":
     print("Hello Langchain")
@@ -35,12 +30,12 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
+    linkedin_data = scrape_linkedin_profile(
+        linkedin_profile_url="https://www.linkedin.com/in/nayak-jitendra/"
+    )
+
     # before course upgradation:
-    # print(chain.run(information=information))
+    # print(chain.run(input={"information": linkedin_data}))
     
     # after course upgradation:
-    res = chain.invoke(input={"information":information})
-    # print (res)
-    print (res.keys())
-    print (res['text'])
-    
+    print(chain.invoke(input={"information": linkedin_data}))
