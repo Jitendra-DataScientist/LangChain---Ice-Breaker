@@ -6,7 +6,7 @@ from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain
 from dotenv import load_dotenv
-from third_parties.linkedin import scrape_linkedin_profile
+from third_parties.linkedin_bypass import scrape_linkedin_profile
 
 
 dotenv_path = os.path.join(os.getcwd(), ".env")
@@ -30,12 +30,11 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    linkedin_data = scrape_linkedin_profile(
-        linkedin_profile_url="https://www.linkedin.com/in/nayak-jitendra/"
-    )
+    linkedin_data = scrape_linkedin_profile()
 
     # before course upgradation:
     # print(chain.run(information=linkedin_data))
     
     # after course upgradation:
-    print(chain.invoke(input={"information": linkedin_data}))
+    res = chain.invoke(input={"information": linkedin_data})
+    print(res["text"])
