@@ -9,9 +9,10 @@ from langchain.chains import LLMChain
 from dotenv import load_dotenv
 
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
-from agents.twitter_lookup_agent import lookup as twitter_lookup_agent
+# from agents.twitter_lookup_agent import lookup as twitter_lookup_agent   # by-pass
 from third_parties.linkedin import scrape_linkedin_profile
-from third_parties.twitter import scrape_user_tweets
+# from third_parties.twitter import scrape_user_tweets   # by-pass
+from third_parties.twitter_bypass import scrape_user_tweets
 
 
 dotenv_path = os.path.join(os.getcwd(), ".env")
@@ -20,15 +21,16 @@ OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 # print (OPENAI_API_KEY)
 
 
-name = "Harrison Chase"
+name = "Jitendra Kumar Nayak, Petonic Infotech"
 if __name__ == "__main__":
     print("Hello LangChain!")
 
     linkedin_profile_url = linkedin_lookup_agent(name=name)
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
-    twitter_username = twitter_lookup_agent(name=name)
-    tweets = scrape_user_tweets(username=twitter_username, num_tweets=5)
+    # twitter_username = twitter_lookup_agent(name=name)   # by-pass
+    # tweets = scrape_user_tweets(username=twitter_username, num_tweets=5)   # by-pass
+    tweets = scrape_user_tweets(num_tweets=5)
 
     summary_template = """
          given the Linkedin information {linkedin_information} and twitter {twitter_information} about a person from I want you to create:
@@ -51,5 +53,10 @@ if __name__ == "__main__":
     # print(chain.run(information=linkedin_data))
 
     # after course upgradation:
-    res = chain.invoke(input={"information": linkedin_data})
+    res = chain.invoke(
+        input={
+            "linkedin_information":linkedin_data,
+            "twitter_information":tweets
+            }
+        )
     print(res["text"])
