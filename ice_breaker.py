@@ -35,7 +35,7 @@ if __name__ == "__main__":
     )
 
     # before course upgradation:
-    # print(chain.run(input={"information": linkedin_data}))
+    # print(chain.run(information=information))
     
     # after course upgradation:
     print(chain.invoke(input={"information": linkedin_data}))
