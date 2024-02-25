@@ -1,6 +1,7 @@
 import os
 # from langchain import PromptTemplate    # deprecated or about to be deprecated
-from langchain.prompts import PromptTemplate
+from langchain.prompts import PromptTemplate    # deprecated or about to be deprecated
+from langchain_core.prompts import PromptTemplate
 # from langchain.chat_models import ChatOpenAI    # deprecated or about to be deprecated
 # from langchain_community.chat_models import ChatOpenAI    # deprecated or about to be deprecated
 from langchain_openai import ChatOpenAI
@@ -32,8 +33,8 @@ if __name__ == "__main__":
 
     chain = LLMChain(llm=llm, prompt=summary_prompt_template)
 
-    # linkedin_profile_url = linkedin_lookup_agent(name="Jitendra Kumar Nayak ExactSpace")
-    linkedin_profile_url = linkedin_lookup_agent(name="Eden Marco Udemy")
+    linkedin_profile_url = linkedin_lookup_agent(name="Jitendra Kumar Nayak ExactSpace")
+    # linkedin_profile_url = linkedin_lookup_agent(name="Eden Marco Udemy")
 
     linkedin_data = scrape_linkedin_profile(
         linkedin_profile_url=linkedin_profile_url
@@ -41,7 +42,7 @@ if __name__ == "__main__":
 
     # before course upgradation:
     # print(chain.run(information=linkedin_data))
-    
+
     # after course upgradation:
     res = chain.invoke(input={"information": linkedin_data})
     print(res["text"])
