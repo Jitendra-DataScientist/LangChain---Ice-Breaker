@@ -13,6 +13,7 @@ from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 from third_parties.linkedin import scrape_linkedin_profile
 # from third_parties.twitter import scrape_user_tweets   # by-pass
 from third_parties.twitter_bypass import scrape_user_tweets
+from output_parsers import person_intel_parser, PersonIntel
 
 
 dotenv_path = os.path.join(os.getcwd(), ".env")
@@ -21,10 +22,8 @@ OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 # print (OPENAI_API_KEY)
 
 
-name = "Jitendra Kumar Nayak, Petonic Infotech"
-if __name__ == "__main__":
-    print("Hello LangChain!")
 
+def ice_break(name: str) -> PersonIntel:
     linkedin_profile_url = linkedin_lookup_agent(name=name)
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
@@ -37,12 +36,16 @@ if __name__ == "__main__":
          1. a short summary
          2. two interesting facts about them
          3. A topic that may interest them
-         4. 2 creative Ice breakers to open a conversation with them 
+         4. 2 creative Ice breakers to open a conversation with them
+        \n{format_instructions}
      """
 
     summary_prompt_template = PromptTemplate(
         input_variables=["linkedin_information", "twitter_information"],
         template=summary_template,
+        partial_variables={
+            "format_instructions":person_intel_parser.get_format_instructions()
+            },
     )
 
     llm = ChatOpenAI(temperature=1, model_name="gpt-3.5-turbo")
@@ -59,4 +62,13 @@ if __name__ == "__main__":
             "twitter_information":tweets
             }
         )
-    print(res["text"])
+
+    # print(res["text"])
+    # return res["text"]
+    return person_intel_parser.parse(res["text"])
+
+
+if __name__ == "__main__":
+    print("Hello LangChain!")
+    result = ice_break(name = "Jitendra Kumar Nayak, Petonic Infotech")
+    print (result)

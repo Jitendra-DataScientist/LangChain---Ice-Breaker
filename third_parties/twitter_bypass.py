@@ -10,4 +10,3 @@ def scrape_user_tweets(num_tweets=20):
         tweet_list = json.load(file)
 
     return tweet_list
-# print (scrape_user_tweets(num_tweets=20))
