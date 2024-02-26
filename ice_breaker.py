@@ -14,6 +14,7 @@ from third_parties.linkedin import scrape_linkedin_profile
 # from third_parties.twitter import scrape_user_tweets   # by-pass
 from third_parties.twitter_bypass import scrape_user_tweets
 from output_parsers import person_intel_parser, PersonIntel
+from typing import Tuple
 
 
 dotenv_path = os.path.join(os.getcwd(), ".env")
@@ -23,7 +24,7 @@ OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 
 
 
-def ice_break(name: str) -> PersonIntel:
+def ice_break(name: str) -> Tuple[PersonIntel, str]:
     linkedin_profile_url = linkedin_lookup_agent(name=name)
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url=linkedin_profile_url)
 
@@ -65,7 +66,7 @@ def ice_break(name: str) -> PersonIntel:
 
     # print(res["text"])
     # return res["text"]
-    return person_intel_parser.parse(res["text"])
+    return person_intel_parser.parse(res["text"]), linkedin_data.get("profile_pic_url")
 
 
 if __name__ == "__main__":
